@@ -1,82 +1,135 @@
-# SmartTrip AI — Premium MERN Travel Planner
+# 🌍 SmartTrip AI Planner
 
-SmartTrip AI is a state-of-the-art web application that automatically translates travel booking documents (PDF tickets, hotel receipts, flight confirmations, and train tickets) into a gorgeous day-by-day vacation roadmap.
+An AI-powered travel planning web application that automatically generates personalized day-by-day itineraries from your uploaded booking documents.
 
----
-
-## 🌟 Key Features
-
-1. **AI-Powered OCR and Data Extraction:**
-   - Drag and drop PDF or image tickets (PNG/JPG) directly into the planner console.
-   - Extracts departure/arrival locations, dates, check-in times, and reservation confirmation numbers using **Gemini 1.5 Flash**.
-
-2. **Daily Timeline Synthesis:**
-   - Seamlessly integrates extracted check-ins and flights on the correct dates and times.
-   - Organizes each day into Morning, Afternoon, and Evening activities, enriched with sightseeing destinations and dining spots.
-
-3. **Product-Oriented Exporters (Client-Side):**
-   - 📅 **ICS Calendar Sync:** Synthesizes and exports standard `.ics` calendar events. One-click import into Google Calendar, Outlook, or Apple Calendar!
-   - 🖨️ **Print-to-PDF Formatting:** Custom CSS print styles that hide buttons and dashboard panels, allowing you to save beautiful physical PDF brochures.
-
-4. **Public Itinerary Sharing and Cloning:**
-   - Toggle an itinerary to "Shared" to generate an obfuscated public share link.
-   - Friends can view your timeline in a stunning, read-only dashboard.
-   - 📂 **Cloning Pipeline:** Any registered visitor can click "Save to Dashboard" to copy the public itinerary directly into their personal account to customize it!
-
-5. **Dynamic API Key Drawer:**
-   - A secure settings panel in the navigation bar allows users to save their own `GEMINI_API_KEY` securely in browser storage (`localStorage`), bypassing backend variables if needed.
+![SmartTrip AI Planner](./samples/sample_flight_ticket.png)
 
 ---
 
-## 🛠️ Technical Stack
+## 🚀 Features
 
-- **Frontend:** React.js, Vite, React Router, Lucide Icons, Custom Glassmorphism CSS Framework
-- **Backend:** Node.js, Express.js, Multer (In-Memory buffer processing)
-- **Database:** MongoDB, Mongoose ORM
-- **AI Core:** Official Google Gen AI SDK (`@google/generative-ai` + Gemini 1.5 Flash)
-- **Security:** JWT (JSON Web Tokens) Authorization Bearer headers, bcryptjs password hashing
+### Core Features
+- ✅ **JWT Authentication** — Secure login/register with token persistence
+- ✅ **Document Upload** — Upload flight tickets, hotel bookings, PDFs, and images
+- ✅ **AI Data Extraction** — Powered by **Google Gemini 2.5 Flash** to parse booking info
+- ✅ **AI Itinerary Generation** — Auto-generates a full day-by-day travel roadmap
+- ✅ **Itinerary History** — Dashboard to browse and manage all saved trips
+- ✅ **Sharing** — Public shareable link with UUID + "Clone to Dashboard" button
+- ✅ **Responsive UI** — Premium React frontend with dark theme and glassmorphism
+
+### Bonus Features
+- ✅ **AWS S3 Integration** — Booking documents backed up to S3 cloud storage
+- ✅ **Drag-and-Drop** — Smooth drag-and-drop file uploader
+- ✅ **ICS Calendar Export** — Export trip to Google/Apple/Outlook Calendar
+- ✅ **Print to PDF** — Clean print media queries for PDF output
+- ✅ **Interactive Packing Checklist** — AI-generated, checkable packing list
+- ✅ **Travel Tips** — AI-powered local tips for every destination
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React.js (Vite), React Router, Lucide Icons |
+| Backend | Node.js, Express.js (ES Modules) |
+| Database | MongoDB (Mongoose ODM) |
+| AI Engine | Google Gemini 2.5 Flash API |
+| File Storage | AWS S3 (ap-south-1) |
+| Auth | JWT (JSON Web Tokens) + bcryptjs |
+
+---
+
+## ⚙️ Setup & Installation
 
 ### Prerequisites
-- Node.js (v18+)
-- MongoDB running locally on the default port `27017`
+- Node.js v18+
+- MongoDB (local or Atlas)
+- Google Gemini API Key (free from [Google AI Studio](https://aistudio.google.com/))
+- AWS S3 credentials (optional — app works without it)
 
-### 1. Setup Backend Environment Variables
-Create a file at `backend/.env` (a template is already provided) and configure the following parameters:
+### 1. Clone the Repository
+```bash
+git clone https://github.com/AbhishekPatil2028/SmartTrip_AI_Planner.git
+cd SmartTrip_AI_Planner
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file in the `backend/` directory:
 ```env
 PORT=3000
 MONGO_URI=mongodb://127.0.0.1:27017/smarttrip_ai_planner
-JWT_SECRET=super_secret_key_for_smarttrip_ai_planner_123!
-
-# OPTIONAL: Configure your key here, or supply it in the frontend settings panel.
+JWT_SECRET=your_super_secret_jwt_key
 GEMINI_API_KEY=your_gemini_api_key_here
+
+# Optional: AWS S3 (skip if not using cloud storage)
+AWS_ACCESS_KEY=your_aws_access_key
+AWS_SECRET_KEY=your_aws_secret_key
+AWS_REGION=ap-south-1
+AWS_BUCKET_NAME=your_bucket_name
 ```
 
-### 2. Run the Applications
-
-#### Start the Backend API Server:
+Start the backend:
 ```bash
-cd backend
-npm run dev # or npm start
+node server.js
 ```
-The backend API server will run at `http://localhost:3000`.
 
-#### Start the React Frontend Server:
+### 3. Frontend Setup
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
-The React development server will start at `http://localhost:5173`. Open this URL in your web browser!
+
+### 4. Open in Browser
+Visit `http://localhost:5173`
 
 ---
 
-## 🔒 Security & Privacy Note
-Your passwords are fully hashed using **bcryptjs** in the database. When uploading travel tickets, the files are processed directly in-memory and sent straight to Gemini APIs via HTTPS — no documents are stored permanently on our server, preserving complete digital privacy.
+## 🔑 API Key Configuration (Important!)
 
+The app supports **dynamic API key switching** via the UI:
+- If you hit a `429 Quota Exceeded` error, click the **⚙️ Settings** (cog icon) in the navbar
+- Paste a new free Gemini API key from [Google AI Studio](https://aistudio.google.com/)
+- The app instantly uses the new key — no restart required!
 
-// for Tester 
+---
 
-"The application is configured with a default backend Gemini key. If you experience a 429 Quota Exceeded error due to concurrent testers, please click the Settings (cog) icon in the top-right navbar to easily save your own free Gemini API Key from Google AI Studio to resume testing instantly!"
+## 📁 Folder Structure
+
+```
+SmartTrip_AI_Planner/
+├── backend/
+│   ├── config/          # DB + S3 configuration
+│   ├── controllers/     # Route controllers (auth, upload, itinerary)
+│   ├── middleware/      # JWT auth middleware
+│   ├── models/          # Mongoose schemas (User, Itinerary)
+│   ├── routes/          # Express route definitions
+│   └── server.js        # Entry point
+├── frontend/
+│   ├── src/
+│   │   ├── components/  # Reusable components (Navbar, BookingCard, Timeline...)
+│   │   ├── context/     # Auth context + API key management
+│   │   ├── pages/       # Route pages (Landing, Login, Dashboard, Planner, Itinerary)
+│   │   └── App.jsx      # Router setup
+│   └── index.html
+└── samples/             # Sample test files (flight ticket, hotel booking)
+```
+
+---
+
+## 📸 Sample Test Files
+
+The `samples/` folder contains ready-to-use test documents:
+- `sample_flight_ticket.png` — Air France AF023, JFK→CDG
+- `sample_hotel_booking.png` — Ritz Paris, Jun 15–22 2026
+
+---
+
+## 📄 License
+MIT License — Free to use and modify.

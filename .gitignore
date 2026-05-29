@@ -1,5 +1,8 @@
-node_modules
+# Root level gitignore
+node_modules/
 .env
-dist
-build
-coverage
+*.log
+.DS_Store
+Thumbs.db
+dist/
+build/
