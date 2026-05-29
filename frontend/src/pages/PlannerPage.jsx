@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { BACKEND_URL } from '../context/AuthContext';
 import BookingCard from '../components/BookingCard';
 import Loader from '../components/Loader';
-import { FileUp, Calendar, MapPin, Sparkles, AlertCircle, Plus, ShieldAlert } from 'lucide-react';
+import { FileUp, Calendar, MapPin, Sparkles, AlertCircle, Plus } from 'lucide-react';
 
 const PlannerPage = () => {
   const { getHeaders, apiKey } = useAuth();
@@ -169,24 +169,23 @@ const PlannerPage = () => {
         </p>
       </div>
 
-      {/* Dynamic API warning banner if missing */}
+      {/* Friendly info banner about API key being optional */}
       {!apiKey && (
         <div className="glass-panel" style={{
           padding: '16px 20px',
-          border: '1px solid rgba(251, 191, 36, 0.25)',
-          background: 'rgba(251, 191, 36, 0.05)',
+          border: '1px solid rgba(34, 197, 94, 0.2)',
+          background: 'rgba(34, 197, 94, 0.05)',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          color: '#fbbf24',
+          color: '#86efac',
           fontSize: '13.5px',
           marginBottom: '32px',
         }}>
-          <ShieldAlert size={20} style={{ flexShrink: 0 }} />
+          <Sparkles size={20} style={{ flexShrink: 0 }} />
           <div>
-            <strong>Missing API Key:</strong> We notice you haven't saved a Gemini API Key in your browser settings. 
-            Please open the <strong>Settings (cog)</strong> in the top-right navbar to save your key, or ensure 
-            your backend `.env` is fully configured.
+            <strong>Ready to go!</strong> SmartTrip AI uses a built-in server key. 
+            Want to use your own Gemini key? Open <strong>Settings (⚙️)</strong> in the navbar — it's optional.
           </div>
         </div>
       )}

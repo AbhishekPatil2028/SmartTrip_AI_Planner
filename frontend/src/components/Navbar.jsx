@@ -93,31 +93,7 @@ const Navbar = () => {
               
               <div style={{ width: '1px', height: '20px', background: 'rgba(255, 255, 255, 0.1)', margin: '0 8px' }} />
               
-              {/* API Warning alert if not set */}
-              {!apiKey && (
-                <div 
-                  onClick={() => setIsDrawerOpen(true)}
-                  title="Gemini API Key missing! Click to configure."
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    background: 'rgba(244, 63, 94, 0.15)',
-                    border: '1px solid rgba(244, 63, 94, 0.3)',
-                    color: '#fda4af',
-                    padding: '6px 12px',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    marginRight: '8px',
-                    fontWeight: 500,
-                    animation: 'shimmer 2s infinite'
-                  }}
-                >
-                  <ShieldAlert size={14} />
-                  <span>Key Required</span>
-                </div>
-              )}
+
 
               {/* Settings Action Button */}
               <button 
@@ -318,21 +294,34 @@ const Navbar = () => {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <Key size={24} color="var(--color-secondary)" />
-              <h3 style={{ fontSize: '20px' }}>AI Core Configuration</h3>
+              <h3 style={{ fontSize: '20px' }}>AI Configuration</h3>
+            </div>
+
+            <div style={{
+              background: 'rgba(34, 197, 94, 0.08)',
+              border: '1px solid rgba(34, 197, 94, 0.2)',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              lineHeight: '1.5',
+              color: '#86efac',
+              marginBottom: '16px'
+            }}>
+              ✅ <strong>Server key active:</strong> SmartTrip AI already has a built-in API key. You can start using the app immediately without providing your own.
             </div>
 
             <p style={{ fontSize: '14px', marginBottom: '24px', color: 'var(--text-secondary)' }}>
-              To execute document text extraction and travel itinerary synthesis, SmartTrip AI requires a Gemini API Key.
+              <strong>Optional:</strong> Provide your own Gemini API key below if you encounter quota limits or want to use your personal key instead.
             </p>
 
             <form onSubmit={handleSaveKey} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>GEMINI API KEY</label>
+                <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>GEMINI API KEY (OPTIONAL)</label>
                 <input 
                   type="password"
                   value={tempKey}
                   onChange={(e) => setTempKey(e.target.value)}
-                  placeholder="Enter AI API Key here..."
+                  placeholder="Leave empty to use server default..."
                   className="input-glass"
                   style={{ width: '100%' }}
                 />
@@ -347,7 +336,7 @@ const Navbar = () => {
                 lineHeight: '1.5',
                 color: 'var(--text-muted)'
               }}>
-                💡 <strong>Privacy Note:</strong> Your API key is stored locally and securely in your own browser's storage and never sent to any third party except the Google generative models directly.
+                💡 <strong>Privacy Note:</strong> Your API key is stored locally in your browser and never sent to any third party. If left empty, the server's built-in key is used automatically.
               </div>
 
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
