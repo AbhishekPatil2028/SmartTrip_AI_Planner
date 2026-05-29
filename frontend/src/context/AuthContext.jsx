@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
   const [loading, setLoading] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Initialize and verify user token on load
   useEffect(() => {
@@ -115,11 +116,17 @@ export const AuthProvider = ({ children }) => {
     return headers;
   };
 
+  const openSettings = () => setIsSettingsOpen(true);
+  const closeSettings = () => setIsSettingsOpen(false);
+
   const value = {
     user,
     token,
     apiKey,
     loading,
+    isSettingsOpen,
+    openSettings,
+    closeSettings,
     register,
     login,
     logout,

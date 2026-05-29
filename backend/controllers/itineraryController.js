@@ -154,9 +154,21 @@ Ensure the output is clean JSON. Do not include markdown formatting or backticks
     });
   } catch (error) {
     console.error('Itinerary Generation Error:', error.message);
+    const isQuota = error.message.includes('429') || 
+                    error.message.toLowerCase().includes('quota') || 
+                    error.message.toLowerCase().includes('limit');
+    
+    if (isQuota) {
+      return res.status(429).json({
+        success: false,
+        isQuotaExceeded: true,
+        message: 'The shared server API key has reached its Google free-tier rate limit.',
+      });
+    }
+
     return res.status(500).json({
       success: false,
-      message: 'Error generating AI itinerary. ' + error.message,
+      message: 'Failed to generate itinerary: ' + error.message,
     });
   }
 };

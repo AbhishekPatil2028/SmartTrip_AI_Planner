@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Compass, LogOut, Settings, Key, User, Menu, X, ShieldAlert } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, logout, apiKey, saveApiKey } = useAuth();
+  const { user, logout, apiKey, saveApiKey, isSettingsOpen, openSettings, closeSettings } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [tempKey, setTempKey] = useState(apiKey);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Sync temp key with stored apiKey when settings open
+  useEffect(() => {
+    if (isSettingsOpen) {
+      setTempKey(apiKey);
+    }
+  }, [isSettingsOpen, apiKey]);
 
   const handleSaveKey = (e) => {
     e.preventDefault();
     saveApiKey(tempKey);
-    setIsDrawerOpen(false);
+    closeSettings();
   };
 
   const handleLogout = () => {
@@ -97,7 +103,7 @@ const Navbar = () => {
 
               {/* Settings Action Button */}
               <button 
-                onClick={() => setIsDrawerOpen(true)}
+                onClick={openSettings}
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -207,7 +213,7 @@ const Navbar = () => {
               <Link to="/planner" onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '8px', fontWeight: 500 }}>Plan New Trip</Link>
               <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
               <button 
-                onClick={() => { setIsMobileMenuOpen(false); setIsDrawerOpen(true); }}
+                onClick={() => { setIsMobileMenuOpen(false); openSettings(); }}
                 style={{
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -253,7 +259,7 @@ const Navbar = () => {
       )}
 
       {/* Dynamic API Configuration Settings Drawer (Overlay modal) */}
-      {isDrawerOpen && (
+      {isSettingsOpen && (
         <div style={{
           position: 'fixed',
           top: 0,
@@ -278,7 +284,7 @@ const Navbar = () => {
             boxShadow: '0 0 50px rgba(139, 92, 246, 0.15)'
           }}>
             <button 
-              onClick={() => setIsDrawerOpen(false)}
+              onClick={closeSettings}
               style={{
                 position: 'absolute',
                 top: '16px',
@@ -342,7 +348,7 @@ const Navbar = () => {
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <button 
                   type="button"
-                  onClick={() => setIsDrawerOpen(false)}
+                  onClick={closeSettings}
                   className="btn-premium-secondary"
                   style={{ flex: 1 }}
                 >

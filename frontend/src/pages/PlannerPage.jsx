@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import { FileUp, Calendar, MapPin, Sparkles, AlertCircle, Plus } from 'lucide-react';
 
 const PlannerPage = () => {
-  const { getHeaders, apiKey } = useAuth();
+  const { getHeaders, apiKey, openSettings } = useAuth();
   const navigate = useNavigate();
   
   const [destination, setDestination] = useState('');
@@ -89,7 +89,14 @@ const PlannerPage = () => {
           setDestination(data.booking.destination);
         }
       } else {
-        setError(data.message || 'Failed to extract booking details.');
+        if (response.status === 429 || data.isQuotaExceeded) {
+          setError({
+            message: 'The shared server key has temporarily reached its Google free-tier quota limit.',
+            isQuota: true
+          });
+        } else {
+          setError(data.message || 'Failed to extract booking details.');
+        }
       }
     } catch (err) {
       setError('Communication with AI parsing engine failed. Check your API key.');
@@ -144,7 +151,14 @@ const PlannerPage = () => {
         // Navigate to visual itinerary view page
         navigate(`/itinerary/${data.itinerary._id}`);
       } else {
-        setError(data.message || 'Itinerary generation failed.');
+        if (response.status === 429 || data.isQuotaExceeded) {
+          setError({
+            message: 'The shared server key has temporarily reached its Google free-tier quota limit.',
+            isQuota: true
+          });
+        } else {
+          setError(data.message || 'Itinerary generation failed.');
+        }
       }
     } catch (err) {
       setError('Connection failed while generating itinerary.');
@@ -192,19 +206,81 @@ const PlannerPage = () => {
 
       {/* Error State Banner */}
       {error && (
-        <div className="glass-card" style={{
-          padding: '16px 20px',
-          border: '1px solid rgba(244, 63, 94, 0.2)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          color: '#fda4af',
-          fontSize: '14px',
-          marginBottom: '32px',
-        }}>
-          <AlertCircle size={18} style={{ flexShrink: 0 }} />
-          <span>{error}</span>
-        </div>
+        typeof error === 'object' && error.isQuota ? (
+          <div className="glass-card" style={{
+            padding: '24px 32px',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
+            background: 'rgba(239, 68, 68, 0.04)',
+            boxShadow: '0 0 30px rgba(239, 68, 68, 0.1)',
+            borderRadius: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            marginBottom: '32px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <AlertCircle size={24} color="#f87171" style={{ flexShrink: 0 }} />
+              <div>
+                <h4 style={{ fontSize: '16px', fontWeight: 700, color: '#f87171', margin: 0 }}>
+                  Server Quota Exceeded (429)
+                </h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '4px 0 0 0', lineHeight: '1.5' }}>
+                  The shared server-level API key has temporarily reached its Google Gemini free-tier quota limit. 
+                  To continue immediately, please provide your own free Gemini API key (it takes less than 30 seconds to get one).
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
+              <button 
+                onClick={openSettings}
+                className="btn-premium btn-cyan"
+                style={{ 
+                  padding: '10px 20px', 
+                  fontSize: '13.5px', 
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <Sparkles size={15} />
+                <span>Enter Your Free API Key</span>
+              </button>
+
+              <a 
+                href="https://aistudio.google.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: '13.5px',
+                  color: 'var(--color-secondary)',
+                  fontWeight: 600,
+                  textDecoration: 'underline',
+                  transition: 'var(--transition-fast)'
+                }}
+                onMouseOver={(e) => e.target.style.color = '#a78bfa'}
+                onMouseOut={(e) => e.target.style.color = 'var(--color-secondary)'}
+              >
+                Get a free Gemini Key from Google AI Studio →
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="glass-card" style={{
+            padding: '16px 20px',
+            border: '1px solid rgba(244, 63, 94, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            color: '#fda4af',
+            fontSize: '14px',
+            marginBottom: '32px',
+          }}>
+            <AlertCircle size={18} style={{ flexShrink: 0 }} />
+            <span>{typeof error === 'object' ? error.message : error}</span>
+          </div>
+        )
       )}
 
       <div style={{
